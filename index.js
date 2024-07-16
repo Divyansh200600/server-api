@@ -1,61 +1,48 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const Razorpay = require('razorpay');
 const cors = require('cors');
-require('dotenv').config();
+const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3001;
 
-// Initialize Razorpay with your key and secret
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// Allow requests from specific origins
+const allowedOrigins = ['http://localhost:3000', 'https://next-js-pay.vercel.app'];
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
-
-// CORS middleware configuration
 const corsOptions = {
-  origin: 'https://next-js-pay.vercel.app', // Allow requests from this origin
-  methods: ['GET', 'POST', 'OPTIONS'], // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
-  credentials: true // Allow cookies to be sent with requests
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json()); // Parse JSON bodies
 
-// Handle preflight requests
-app.options('*', cors(corsOptions));
-
-// Root route
-app.get('/', (req, res) => {
-  res.send('Welcome to the Razorpay API server!');
-});
-
-// Route to create a Razorpay order
-app.post('/api/createOrder', async (req, res) => {
+// Route to create an order
+app.post('/api/createOrder', (req, res) => {
+  // Replace with your own order creation logic
   const { amount, currency, receipt, notes } = req.body;
 
-  try {
-    // Create order using Razorpay API
-    const order = await razorpay.orders.create({
-      amount,
-      currency,
-      receipt,
-      notes,
-    });
+  // Mock order creation for demonstration purposes
+  const order = {
+    id: 'order_' + Math.floor(Math.random() * 1000000),
+    amount,
+    currency,
+    receipt,
+    notes,
+  };
 
-    // Send the order details back to the client
+  // Simulate async operation with a delay
+  setTimeout(() => {
     res.json(order);
-  } catch (error) {
-    console.error('Error creating Razorpay order:', error);
-    res.status(500).json({ error: 'Failed to create order' });
-  }
+  }, 1000);
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Start your server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
