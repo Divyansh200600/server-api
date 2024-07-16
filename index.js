@@ -1,6 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const Razorpay = require('razorpay');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 
@@ -21,24 +26,35 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json()); // Parse JSON bodies
 
+// Initialize Razorpay instance
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID, // Use the environment variable directly
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
+
 // Route to create an order
-app.post('/api/createOrder', (req, res) => {
-  // Replace with your own order creation logic
-  const { amount, currency, receipt, notes } = req.body;
+app.post('/api/createOrder', async (req, res) => {
+  try {
+    const { amount, currency, receipt, notes } = req.body;
 
-  // Mock order creation for demonstration purposes
-  const order = {
-    id: 'order_' + Math.floor(Math.random() * 1000000),
-    amount,
-    currency,
-    receipt,
-    notes,
-  };
+    const options = {
+      amount,
+      currency,
+      receipt,
+      notes
+    };
 
-  // Simulate async operation with a delay
-  setTimeout(() => {
+    const order = await razorpay.orders.create(options);
     res.json(order);
-  }, 1000);
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+    res.status(500).json({ error: 'Failed to create Razorpay order' });
+  }
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the API');
 });
 
 // Start your server
