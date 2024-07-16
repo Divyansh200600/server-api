@@ -18,7 +18,9 @@ app.use(bodyParser.json());
 
 // Enable CORS for your frontend URL
 app.use(cors({
-  origin: 'https://next-js-pay.vercel.app' // Replace with your actual frontend URL
+  origin: 'https://next-js-pay.vercel.app', // Allow requests from this URL
+  methods: ['GET', 'POST'], // Allow specific methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
 // Root route
