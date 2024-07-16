@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = 3001; // Your server port
+const port = 3001;
 
 // Initialize Razorpay with your key and secret
 const razorpay = new Razorpay({
@@ -17,12 +17,17 @@ const razorpay = new Razorpay({
 app.use(bodyParser.json());
 
 // CORS middleware configuration
-app.use(cors({
+const corsOptions = {
   origin: 'https://next-js-pay.vercel.app', // Allow requests from this origin
   methods: ['GET', 'POST', 'OPTIONS'], // Allow these methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
   credentials: true // Allow cookies to be sent with requests
-}));
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Root route
 app.get('/', (req, res) => {
