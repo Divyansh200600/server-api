@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = 3001; // Changed port to 3001
+const port = 3001;
 
 // Initialize Razorpay with your key and secret
 const razorpay = new Razorpay({
@@ -15,7 +15,13 @@ const razorpay = new Razorpay({
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
-app.use(cors()); // Enable CORS
+
+// CORS middleware configuration
+app.use(cors({
+  origin: 'http://localhost:3000', // Change this to your frontend URL in production
+  methods: ['POST'], // Allow only POST requests
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow headers for POST requests
+}));
 
 // Root route
 app.get('/', (req, res) => {
@@ -47,4 +53,3 @@ app.post('/api/createOrder', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
