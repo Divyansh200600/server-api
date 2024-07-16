@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = 3002;
+const port = process.env.PORT || 3002; // Use process.env.PORT for dynamic port assignment
 
 // Initialize Razorpay with your key and secret
 const razorpay = new Razorpay({
@@ -23,13 +23,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Root route
-app.get('/', (req, res) => {
-  res.send('Your API is up and running!');
-});
-
 // Route to create a Razorpay order
-app.post('/api/createOrder', async (req, res) => {
+app.post('/createOrder', async (req, res) => {
   const { amount, currency, receipt, notes } = req.body;
 
   try {
@@ -49,7 +44,5 @@ app.post('/api/createOrder', async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// Export the Express app
+module.exports = app;
