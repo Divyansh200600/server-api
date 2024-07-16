@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = 3001; // Changed port to 3001
+const port = process.env.PORT || 3001; // Use environment port if provided
 
 // Initialize Razorpay with your key and secret
 const razorpay = new Razorpay({
@@ -15,7 +15,11 @@ const razorpay = new Razorpay({
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
-app.use(cors()); // Enable CORS
+
+// Enable CORS for your frontend URL
+app.use(cors({
+  origin: 'https://next-js-pay.vercel.app' // Replace with your actual frontend URL
+}));
 
 // Root route
 app.get('/', (req, res) => {
@@ -47,7 +51,3 @@ app.post('/api/createOrder', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-
-
-//How much zod 
