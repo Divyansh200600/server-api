@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // CORS middleware configuration
 app.use(cors({
-  origin: 'http://localhost:3000', // Change this to your frontend URL in production
+  origin: 'https://next-js-pay.vercel.app/', // Change this to your frontend URL in production
   methods: ['POST'], // Allow only POST requests
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow headers for POST requests
 }));
