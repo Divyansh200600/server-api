@@ -10,7 +10,8 @@ dotenv.config();
 const app = express();
 
 // Allow requests from specific origins
-const allowedOrigins = ['http://localhost:3000', 'https://next-js-pay.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://next-js-pay.vercel.app','https://learn-4zly.vercel.app'];
+
 
 const corsOptions = {
   origin: function (origin, callback) {
